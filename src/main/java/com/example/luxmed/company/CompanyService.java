@@ -72,12 +72,12 @@ public class CompanyService {
 	}
 
 	private void deleteAllDepartments(Company company) {
-		if (company.getDepartments() != null)
+		if (company.getDepartments() != null && !company.getDepartments().isEmpty())
 			departmentRepository.deleteAllByIdIn(company.getDepartments().stream().map(Department::getId).collect(Collectors.toSet()));
 	}
 
 	private void fillDepartments(Company company, CompanyDto inputCompany) {
-		if (inputCompany.getDepartments() != null) {
+		if (inputCompany.getDepartments() != null && !inputCompany.getDepartments().isEmpty()) {
 			Set<Department> departments = inputCompany.getDepartments().stream().map(departmentDto -> {
 				Department department = new Department();
 				department.setName(departmentDto.getName());
