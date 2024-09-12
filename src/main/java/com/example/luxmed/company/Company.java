@@ -51,8 +51,4 @@ public class Company {
 		return Objects.equals(name, company.name) && Objects.equals(departments, company.departments);
 	}
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(name, departments);
-	}
 }

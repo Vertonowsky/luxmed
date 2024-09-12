@@ -63,8 +63,4 @@ public class Team {
 		return Objects.equals(name, team.name) && Objects.equals(department, team.department) && Objects.equals(project, team.project);
 	}
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(name, department, project);
-	}
 }

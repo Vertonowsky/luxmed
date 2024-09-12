@@ -84,8 +84,4 @@ public class Manager {
 		return phone == manager.phone && Objects.equals(name, manager.name) && Objects.equals(surname, manager.surname) && Objects.equals(email, manager.email) && Objects.equals(project, manager.project);
 	}
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(name, surname, email, phone, project);
-	}
 }

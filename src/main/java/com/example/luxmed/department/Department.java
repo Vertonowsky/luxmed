@@ -64,8 +64,4 @@ public class Department {
 		return Objects.equals(name, that.name) && Objects.equals(company, that.company) && Objects.equals(teams, that.teams);
 	}
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(name, company, teams);
-	}
 }

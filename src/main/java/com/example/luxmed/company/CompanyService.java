@@ -5,6 +5,7 @@ import com.example.luxmed.common.ConflictException;
 import com.example.luxmed.department.Department;
 import com.example.luxmed.department.DepartmentRepository;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.Set;
@@ -31,22 +32,25 @@ public class CompanyService {
 				.orElseThrow(() -> new EntityNotFoundException(ErrorCode.COMPANY_NOT_FOUND));
 	}
 
-	public void create(CompanyDto companyDto) throws ConflictException {
+	@Transactional
+	public Company create(CompanyDto companyDto) throws ConflictException {
 		validateCompanyName(companyDto.getName());
 
 		Company company = new Company();
 		company.setName(companyDto.getName());
-		companyRepository.save(company);
+		company = companyRepository.save(company);
 
 		fillDepartments(company, companyDto);
+		return company;
 	}
 
+	@Transactional
 	public Company edit(int id, CompanyDto companyDto) throws EntityNotFoundException, ConflictException {
 		Company company = get(id);
 		validateCompanyName(companyDto.getName());
 
 		company.setName(companyDto.getName());
-		company.setDepartments(null);
+		deleteAllDepartments(company);
 
 		company = companyRepository.save(company);
 
@@ -54,14 +58,22 @@ public class CompanyService {
 		return company;
 	}
 
+	@Transactional
 	public void delete(int id) throws EntityNotFoundException {
 		Company company = get(id);
+
+		deleteAllDepartments(company);
 		companyRepository.delete(company);
 	}
 
 	private void validateCompanyName(String name) throws ConflictException {
 		if (companyRepository.existsByName(name))
 			throw new ConflictException(ErrorCode.COMPANY_NAME_ALREADY_EXISTS);
+	}
+
+	private void deleteAllDepartments(Company company) {
+		if (company.getDepartments() != null)
+			departmentRepository.deleteAllByIdIn(company.getDepartments().stream().map(Department::getId).collect(Collectors.toSet()));
 	}
 
 	private void fillDepartments(Company company, CompanyDto inputCompany) {
@@ -72,6 +84,7 @@ public class CompanyService {
 				department.setCompany(company);
 				return department;
 			}).collect(Collectors.toSet());
+			company.setDepartments(departments);
 			departmentRepository.saveAll(departments);
 		}
 	}

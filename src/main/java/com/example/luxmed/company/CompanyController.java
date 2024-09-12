@@ -30,8 +30,8 @@ public class CompanyController {
 	}
 
 	@PostMapping
-	public void create(@RequestBody @Validated CompanyDto companyDto) throws ConflictException {
-		companyService.create(companyDto);
+	public CompanyDto create(@RequestBody @Validated CompanyDto companyDto) throws ConflictException {
+		return CompanySerializer.serialize(companyService.create(companyDto));
 	}
 
 	@PutMapping("{id}")

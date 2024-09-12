@@ -52,8 +52,4 @@ public class Project {
 		return Objects.equals(team, project.team) && Objects.equals(manager, project.manager);
 	}
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(team, manager);
-	}
 }
