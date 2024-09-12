@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+  app:
+    image: 'luxmed:latest'
+    build:
+      context: src/main/docker
+    container_name: app
+    depends_on:
+      - database
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://database:5432/luxmed
+      - SPRING_DATASOURCE_USERNAME=luxmed
+      - SPRING_DATASOURCE_PASSWORD=luxmed
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+    ports:
+      - "8080:8080"
+
+  database:
+    image: 'postgres:13.1-alpine'
+    container_name: database
+    environment:
+      - POSTGRES_USER=luxmed
+      - POSTGRES_PASSWORD=luxmed
+      - POSTGRES_DB=luxmed
+    ports:
+      - "5432:5432"
